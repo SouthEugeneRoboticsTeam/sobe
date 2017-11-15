@@ -47,7 +47,7 @@ class YOLO(object):
             raise Exception(
                 'Architecture not supported! Please use Full Yolo or Tiny Yolo!')
 
-        print self.feature_extractor.get_output_shape()
+        print(self.feature_extractor.get_output_shape())
         self.grid_h, self.grid_w = self.feature_extractor.get_output_shape()
         features = self.feature_extractor.extract(input_image)
 
@@ -343,13 +343,13 @@ class YOLO(object):
             sorted_indices = list(
                 reversed(np.argsort([box.classes[c] for box in boxes])))
 
-            for i in xrange(len(sorted_indices)):
+            for i in range(len(sorted_indices)):
                 index_i = sorted_indices[i]
 
                 if boxes[index_i].classes[c] == 0:
                     continue
                 else:
-                    for j in xrange(i+1, len(sorted_indices)):
+                    for j in range(i+1, len(sorted_indices)):
                         index_j = sorted_indices[j]
 
                         if self.bbox_iou(boxes[index_i], boxes[index_j]) >= nms_threshold:
