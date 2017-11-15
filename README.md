@@ -20,6 +20,22 @@ repository. Feel free to contribute more images and labels!
 
 ## Usage
 
+### Installing
+
+Before installing SOBE, ensure you have Python installed.
+
+Then, clone SOBE locally:
+
+```bash
+$ git clone https://github.com/SouthEugeneRoboticsTeam/sobe
+```
+
+Navigate to the freshly cloned SOBE directory, and install the requirements:
+
+```bash
+$ pip install -r requirements.txt
+```
+
 ### Training
 
 To train the network, first configure the `config.json` file for your dataset,
@@ -34,9 +50,5 @@ $ python train.py -c config.json
 To test the trained weights on a specific image, use the following command:
 
 ```bash
-$ python predict.py -c config.json /path/to/image.jpg
+$ python predict.py -c config.json -i /path/to/image.jpg -w /path/to/weights.h5
 ```
-
-This command will use the saved weights generated in training. If you'd like to
-use different weights, set them in the `config.json`'s `saved_weights_name`
-parameter.
