@@ -1,0 +1,8 @@
+opencv-python
+tqdm
+numpy
+argparse
+imgaug
+keras
+tensorflow
+h5py
