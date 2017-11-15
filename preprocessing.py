@@ -6,7 +6,9 @@ import imgaug as ia
 from imgaug import augmenters as iaa
 from keras.utils import Sequence
 import xml.etree.ElementTree as ET
-from utils import BoundBox, normalize, bbox_iou
+from utils import BoundBox
+from utils import bbox_iou
+from utils import normalize
 
 
 def parse_annotation(ann_dir, img_dir, labels=[]):
