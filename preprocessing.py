@@ -18,7 +18,6 @@ def parse_annotation(ann_dir, img_dir, labels=[]):
     for ann in sorted(os.listdir(ann_dir)):
         img = {'object': []}
 
-        print(ann_dir + ann)
         tree = ET.parse(ann_dir + ann)
 
         for elem in tree.iter():
