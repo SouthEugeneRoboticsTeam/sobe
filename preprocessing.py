@@ -123,7 +123,7 @@ class BatchGenerator(Sequence):
                         # sometimes(iaa.OneOf([
                         #    iaa.EdgeDetect(alpha=(0, 0.7)),
                         #    iaa.DirectedEdgeDetect(alpha=(0, 0.7), direction=(0.0, 1.0)),
-                        #])),
+                        # ])),
                         # add gaussian noise to images
                         iaa.AdditiveGaussianNoise(loc=0, scale=(
                             0.0, 0.05*255), per_channel=0.5),
@@ -139,7 +139,7 @@ class BatchGenerator(Sequence):
                         iaa.Multiply((0.5, 1.5), per_channel=0.5),
                         # improve or worsen the contrast
                         iaa.ContrastNormalization((0.5, 2.0), per_channel=0.5),
-                        #iaa.Grayscale(alpha=(0.0, 1.0)),
+                        # iaa.Grayscale(alpha=(0.0, 1.0)),
                         # sometimes(iaa.ElasticTransformation(alpha=(0.5, 3.5), sigma=0.25)), # move pixels locally around (with random strengths)
                         # sometimes(iaa.PiecewiseAffine(scale=(0.01, 0.05))) # sometimes move parts of the image around
                     ],
@@ -156,8 +156,8 @@ class BatchGenerator(Sequence):
         return int(np.ceil(float(len(self.images))/self.config['BATCH_SIZE']))
 
     def __getitem__(self, idx):
-        l_bound = idx*self.config['BATCH_SIZE']
-        r_bound = (idx+1)*self.config['BATCH_SIZE']
+        l_bound = idx * self.config['BATCH_SIZE']
+        r_bound = (idx + 1) * self.config['BATCH_SIZE']
 
         if r_bound > len(self.images):
             r_bound = len(self.images)
@@ -208,10 +208,7 @@ class BatchGenerator(Sequence):
                         best_anchor = -1
                         max_iou = -1
 
-                        shifted_box = BoundBox(0,
-                                               0,
-                                               center_w,
-                                               center_h)
+                        shifted_box = BoundBox(0, 0, center_w, center_h)
 
                         for i in range(len(self.anchors)):
                             anchor = self.anchors[i]
@@ -245,7 +242,7 @@ class BatchGenerator(Sequence):
                         cv2.rectangle(img[:, :, ::-1], (obj['xmin'], obj['ymin']),
                                       (obj['xmax'], obj['ymax']), (255, 0, 0), 3)
                         cv2.putText(img[:, :, ::-1], obj['name'],
-                                    (obj['xmin']+2, obj['ymin']+12),
+                                    (obj['xmin'] + 2, obj['ymin'] + 12),
                                     0, 1.2e-3 * img.shape[0],
                                     (0, 255, 0), 2)
 
