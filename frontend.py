@@ -229,7 +229,7 @@ class YOLO(object):
         if self.debug:
             nb_true_box = tf.reduce_sum(y_true[..., 4])
             nb_pred_box = tf.reduce_sum(tf.to_float(
-                true_box_conf > 0.5) * tf.to_float(pred_box_conf > 0.3))
+                true_box_conf > 0.5) * tf.to_float(pred_box_conf > 0.4))
 
             current_recall = nb_pred_box/(nb_true_box + 1e-6)
             total_recall = tf.assign_add(total_recall, current_recall)
@@ -303,7 +303,7 @@ class YOLO(object):
             else:
                 return min(x2, x4) - x3
 
-    def decode_netout(self, netout, obj_threshold=0.3, nms_threshold=0.3):
+    def decode_netout(self, netout, obj_threshold=0.4, nms_threshold=0.4):
         grid_h, grid_w, nb_box = netout.shape[:3]
 
         boxes = []
