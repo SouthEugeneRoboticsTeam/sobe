@@ -373,7 +373,8 @@ class YOLO(object):
 
         return e_x / e_x.sum(axis, keepdims=True)
 
-    def train(self, train_imgs,     # list of images to train the model
+    def train(self,
+              train_imgs,     # list of images to train the model
               valid_imgs,     # list of images used to validate the model
               train_times,    # number of time to repeat the training set, often used for small datasets
               valid_times,    # number of times to repeat the validation set, often used for small datasets

@@ -3,42 +3,6 @@
 """
 This script takes in a configuration file and produces the best model.
 The configuration file is a json file and looks like this:
-
-{
-    "model" : {
-        "architecture":         "Full Yolo",
-        "input_size":           416,
-        "anchors":              [0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282, 3.52778, 9.77052, 9.16828],
-        "max_box_per_image":    10,
-        "labels":               ["raccoon"]
-    },
-
-    "train": {
-        "train_image_folder":   "/home/andy/data/raccoon_dataset/images/",
-        "train_annot_folder":   "/home/andy/data/raccoon_dataset/anns/",
-
-        "train_times":          10,
-        "pretrained_weights":   "",
-        "batch_size":           16,
-        "learning_rate":        1e-4,
-        "nb_epoch":             50,
-        "warmup_batches":       100,
-
-        "object_scale":         5.0 ,
-        "no_object_scale":      1.0,
-        "coord_scale":          1.0,
-        "class_scale":          1.0,
-
-        "debug":                true
-    },
-
-    "valid": {
-        "valid_image_folder":   "",
-        "valid_annot_folder":   "",
-
-        "valid_times":          1
-    }
-}
 """
 
 import argparse
