@@ -11,6 +11,7 @@ from frontend import YOLO
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
+
 def _main_(argstate):
 
     weights_path = argstate.weights

@@ -1,8 +1,12 @@
 # Parses input from command line arguments
 import argparse
 import json
-class ArgState: # Anonymous class used by the returned state
+
+
+class ArgState:  # Anonymous class used by the returned state
     pass
+
+
 def parse_predict():
     # This factors in command line arguments and config and merges them to
     # produce a single configuration object
@@ -36,6 +40,7 @@ def parse_predict():
     argstate.max_box_per_image = config['model']['max_box_per_image']
     argstate.anchors = config['model']['anchors']
 
-    argstate.weights = args.weights if args.weights is not None else config['train']['saved_weights_name']
+    argstate.weights = args.weights if args.weights is not None else config[
+        'train']['saved_weights_name']
     argstate.input = args.input
     return argstate

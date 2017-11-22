@@ -73,7 +73,8 @@ def _main_(args):
     ###############################
 
     if os.path.exists(config['train']['pretrained_weights']):
-        print("Loading pre-trained weights in", config['train']['pretrained_weights'])
+        print("Loading pre-trained weights in",
+              config['train']['pretrained_weights'])
         yolo.load_weights(config['train']['pretrained_weights'])
 
     ###############################
