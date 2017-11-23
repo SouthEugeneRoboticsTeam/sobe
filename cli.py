@@ -40,7 +40,9 @@ def parse_predict():
     argstate.max_box_per_image = config['model']['max_box_per_image']
     argstate.anchors = config['model']['anchors']
 
-    argstate.weights = args.weights if args.weights is not None else config[
-        'train']['saved_weights_name']
+    if args.weights is not None:
+        argstate.weights = args.weights
+    else:
+        argstate.weights = config['train']['saved_weights_name']
     argstate.input = args.input
     return argstate
