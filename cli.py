@@ -15,7 +15,7 @@ def parse_predict():
 
     argparser.add_argument(
         '-c',
-        '--conf',
+        '--config',
         help='path to configuration file')
 
     argparser.add_argument(
