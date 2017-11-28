@@ -5,46 +5,30 @@ This script takes in a configuration file and produces the best model.
 The configuration file is a json file and looks like this:
 """
 
-import argparse
+import cli
 import os
 import numpy as np
 from preprocessing import parse_annotation
 from frontend import YOLO
-import json
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-argparser = argparse.ArgumentParser(
-    description='Train and validate YOLO_v2 model on any dataset')
-
-argparser.add_argument(
-    '-c',
-    '--conf',
-    help='path to configuration file')
-
-
-def _main_(args):
-
-    config_path = args.conf
-
-    with open(config_path) as config_buffer:
-        config = json.loads(config_buffer.read())
-
+def main(argstate):
     ###############################
     #   Parse the annotations
     ###############################
 
     # parse annotations of the training set
-    train_imgs, train_labels = parse_annotation(config['train']['train_annot_folder'],
-                                                config['train']['train_image_folder'],
-                                                config['model']['labels'])
+    train_imgs, train_labels = parse_annotation(argstate.annot_folder,
+                                                argstate.image_folder,
+                                                argstate.labels)
 
     # parse annotations of the validation set, if any, otherwise split the training set
-    if os.path.exists(config['valid']['valid_annot_folder']):
-        valid_imgs, valid_labels = parse_annotation(config['valid']['valid_annot_folder'],
-                                                    config['valid']['valid_image_folder'],
-                                                    config['model']['labels'])
+    if os.path.exists(argstate.v_annot_folder):
+        valid_imgs, valid_labels = parse_annotation(argstate.v_annot_folder,
+                                                    argstate.v_image_folder,
+                                                    argstate.labels)
     else:
         train_valid_split = int(0.8*len(train_imgs))
         np.random.shuffle(train_imgs)
@@ -54,7 +38,7 @@ def _main_(args):
 
     print(train_labels)
 
-    if len(set(config['model']['labels']).intersection(set(train_labels.keys()))) == 0:
+    if len(set(argstate.labels).intersection(set(train_labels.keys()))) == 0:
         print("Labels to be detected are not present in the dataset! Please revise the list of labels in the config.json file!")
         return
 
@@ -62,20 +46,20 @@ def _main_(args):
     #   Construct the model
     ###############################
 
-    yolo = YOLO(architecture=config['model']['architecture'],
-                input_size=config['model']['input_size'],
-                labels=config['model']['labels'],
-                max_box_per_image=config['model']['max_box_per_image'],
-                anchors=config['model']['anchors'])
+    yolo = YOLO(architecture=argstate.architecture,
+                input_size=argstate.image_size,
+                labels=argstate.labels,
+                max_box_per_image=argstate.mbpi,
+                anchors=argstate.anchors)
 
     ###############################
     #   Load the pretrained weights (if any)
     ###############################
 
-    if os.path.exists(config['train']['pretrained_weights']):
+    if os.path.exists(argstate.pretrained_weights):
         print("Loading pre-trained weights in",
-              config['train']['pretrained_weights'])
-        yolo.load_weights(config['train']['pretrained_weights'])
+              argstate.pretrained_weights)
+        yolo.load_weights(argstate.pretrained_weights)
 
     ###############################
     #   Start the training process
@@ -83,20 +67,20 @@ def _main_(args):
 
     yolo.train(train_imgs=train_imgs,
                valid_imgs=valid_imgs,
-               train_times=config['train']['train_times'],
-               valid_times=config['valid']['valid_times'],
-               nb_epoch=config['train']['nb_epoch'],
-               learning_rate=config['train']['learning_rate'],
-               batch_size=config['train']['batch_size'],
-               warmup_bs=config['train']['warmup_batches'],
-               object_scale=config['train']['object_scale'],
-               no_object_scale=config['train']['no_object_scale'],
-               coord_scale=config['train']['coord_scale'],
-               class_scale=config['train']['class_scale'],
-               saved_weights_name=config['train']['saved_weights_name'],
-               debug=config['train']['debug'])
+               train_times=argstate.train_times,
+               valid_times=argstate.valid_times,
+               nb_epoch=argstate.nb_epoch,
+               learning_rate=argstate.learning_rate,
+               batch_size=argstate.batch_size,
+               warmup_bs=argstate.warmup_bs,
+               object_scale=argstate.object_scale,
+               no_object_scale=argstate.no_object_scale,
+               coord_scale=argstate.coord_scale,
+               class_scale=argstate.class_scale,
+               saved_weights_name=argstate.saved_weights_name,
+               debug=argstate.debug)
 
 
 if __name__ == '__main__':
-    args = argparser.parse_args()
-    _main_(args)
+    argstate = cli.parse_train()
+    main(argstate)
