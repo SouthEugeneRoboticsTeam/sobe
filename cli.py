@@ -29,9 +29,11 @@ def parse_predict():
         help='path to an image or an video (mp4 format)')
 
     args = argparser.parse_args()
+
     config_path = args.conf
     with open(config_path) as config_buffer:
         config = json.load(config_buffer)
+        
     argstate = ArgState
     argstate.architecture = config['model']['architecture']
     argstate.input_size = config['model']['input_size']
@@ -55,10 +57,13 @@ def parse_train():
         '-c',
         '--config',
         help='path to configuration file')
+
     args = argparser.parse_args()
+
     config_path = args.conf
     with open(config_path) as config_buffer:
         config = json.loads(config_buffer.read())
+
     argstate = ArgState
     argstate.train.annot_folder = config['train']['train_annot_folder']
     argstate.train.image_folder = config['train']['train_image_folder']
