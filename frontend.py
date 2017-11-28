@@ -1,12 +1,22 @@
 from keras.models import Model
-from keras.layers import Reshape, Activation, Conv2D, Input, MaxPooling2D, BatchNormalization, Flatten, Dense, Lambda
+from keras.layers import Activation
+from keras.layers import BatchNormalization
+from keras.layers import Conv2D
+from keras.layers import Dense
+from keras.layers import Flatten
+from keras.layers import Input
+from keras.layers import Lambda
+from keras.layers import MaxPooling2D
+from keras.layers import Reshape
 from keras.layers.advanced_activations import LeakyReLU
 import tensorflow as tf
 import numpy as np
 import cv2
 from keras.applications.mobilenet import MobileNet
 from keras.layers.merge import concatenate
-from keras.optimizers import SGD, Adam, RMSprop
+from keras.optimizers import Adam
+from keras.optimizers import RMSprop
+from keras.optimizers import SGD
 from preprocessing import BatchGenerator
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from utils import BoundBox

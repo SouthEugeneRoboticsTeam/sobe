@@ -46,6 +46,7 @@ def parse_predict():
     argstate.input = args.input
     return argstate
 
+
 def parse_train():
     argparser = argparse.ArgumentParser(
         description='Train and validate YOLO_v2 model on any dataset')
