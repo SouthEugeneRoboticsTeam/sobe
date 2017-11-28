@@ -33,7 +33,7 @@ def parse_predict():
     config_path = args.conf
     with open(config_path) as config_buffer:
         config = json.load(config_buffer)
-        
+
     argstate = ArgState
     argstate.architecture = config['model']['architecture']
     argstate.input_size = config['model']['input_size']
@@ -43,9 +43,11 @@ def parse_predict():
 
     if args.weights is not None:
         argstate.weights = args.weights
+
     else:
         argstate.weights = config['train']['saved_weights_name']
     argstate.input = args.input
+
     return argstate
 
 
@@ -87,4 +89,5 @@ def parse_train():
     argstate.saved_weights_name = config['train']['saved_weights_name']
     argstate.debug = config['train']['debug']
     argstate.pretrained_weights = config['train']['pretrained_weights']
+    
     return argstate
