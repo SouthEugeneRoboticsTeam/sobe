@@ -43,9 +43,9 @@ def parse_predict():
 
     if args.weights is not None:
         argstate.weights = args.weights
-
     else:
         argstate.weights = config['train']['saved_weights_name']
+
     argstate.input = args.input
 
     return argstate
@@ -89,5 +89,5 @@ def parse_train():
     argstate.saved_weights_name = config['train']['saved_weights_name']
     argstate.debug = config['train']['debug']
     argstate.pretrained_weights = config['train']['pretrained_weights']
-    
+
     return argstate
