@@ -59,17 +59,17 @@ def parse_train():
     with open(config_path) as config_buffer:
         config = json.loads(config_buffer.read())
     argstate = ArgState
-    argstate.annot_folder = config['train']['train_annot_folder']
-    argstate.image_folder = config['train']['train_image_folder']
+    argstate.train.annot_folder = config['train']['train_annot_folder']
+    argstate.train.image_folder = config['train']['train_image_folder']
     argstate.labels = config['model']['labels']
-    argstate.v_annot_folder = config['valid']['valid_annot_folder']
-    argstate.v_image_folder = config['valid']['valid_image_folder']
+    argstate.valid.annot_folder = config['valid']['valid_annot_folder']
+    argstate.valid.image_folder = config['valid']['valid_image_folder']
     argstate.architecture = config['model']['architecture']
     argstate.input_size = config['model']['input_size']
     argstate.mbpi = config['model']['max_box_per_image']
     argstate.anchors = config['model']['anchors']
-    argstate.train_times = config['train']['train_times']
-    argstate.valid_times = config['valid']['valid_times']
+    argstate.train.times = config['train']['train_times']
+    argstate.valid.times = config['valid']['valid_times']
     argstate.nb_epoch = config['train']['nb_epoch']
     argstate.learning_rate = config['train']['learning_rate']
     argstate.batch_size = config['train']['batch_size']

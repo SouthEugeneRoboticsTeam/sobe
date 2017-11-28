@@ -20,14 +20,14 @@ def main(argstate):
     ###############################
 
     # parse annotations of the training set
-    train_imgs, train_labels = parse_annotation(argstate.annot_folder,
-                                                argstate.image_folder,
+    train_imgs, train_labels = parse_annotation(argstate.train.annot_folder,
+                                                argstate.train.image_folder,
                                                 argstate.labels)
 
     # parse annotations of the validation set, if any, otherwise split the training set
     if os.path.exists(argstate.v_annot_folder):
-        valid_imgs, valid_labels = parse_annotation(argstate.v_annot_folder,
-                                                    argstate.v_image_folder,
+        valid_imgs, valid_labels = parse_annotation(argstate.valid.annot_folder,
+                                                    argstate.valid.image_folder,
                                                     argstate.labels)
     else:
         train_valid_split = int(0.8*len(train_imgs))
