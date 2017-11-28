@@ -32,7 +32,6 @@ def parse_predict():
     config_path = args.conf
     with open(config_path) as config_buffer:
         config = json.load(config_buffer)
-    print(config)
     argstate = ArgState
     argstate.architecture = config['model']['architecture']
     argstate.input_size = config['model']['input_size']
