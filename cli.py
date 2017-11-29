@@ -30,11 +30,11 @@ def parse_predict():
 
     args = argparser.parse_args()
 
-    config_path = args.conf
+    config_path = args.config
     with open(config_path) as config_buffer:
         config = json.load(config_buffer)
 
-    argstate = ArgState
+    argstate = ArgState()
     argstate.architecture = config['model']['architecture']
     argstate.input_size = config['model']['input_size']
     argstate.labels = config['model']['labels']
@@ -62,11 +62,13 @@ def parse_train():
 
     args = argparser.parse_args()
 
-    config_path = args.conf
+    config_path = args.config
     with open(config_path) as config_buffer:
         config = json.loads(config_buffer.read())
 
-    argstate = ArgState
+    argstate = ArgState()
+    argstate.train = ArgState()
+    argstate.valid = ArgState()
     argstate.train.annot_folder = config['train']['train_annot_folder']
     argstate.train.image_folder = config['train']['train_image_folder']
     argstate.labels = config['model']['labels']
