@@ -93,3 +93,42 @@ def parse_train():
     argstate.pretrained_weights = config['train']['pretrained_weights']
 
     return argstate
+
+def parse_production():
+    argparser = argparse.ArgumentParser(
+        description='Live code for SOBE program')
+
+    argparser.add_argument(
+        '-c',
+        '--config',
+        help='path to configuration file')
+
+    argparser.add_argument(
+        '-w',
+        '--weights',
+        help='path to pretrained weights')
+
+    argparser.add_argument(
+        '-i',
+        '--input',
+        help='path to an image or an video (mp4 format)')
+    argparser.add_argument(
+        '-t',
+        '--timeout',
+        help='Timeout (in seconds) to run a image processing thread before termination'
+    )
+    args = argparser.parse_args()
+    argstate = ArgState()
+
+    config_path = args.config
+    with open(config_path) as config_buffer:
+        config = json.load(config_buffer)
+
+    argstate.architecture = config['model']['architecture']
+    argstate.input_size = config['model']['input_size']
+    argstate.labels = config['model']['labels']
+    argstate.max_box_per_image = config['model']['max_box_per_image']
+    argstate.anchors = config['model']['anchors']
+    argstate.weights = "/home/jacksoncoder/PycharmProjects/Sobe/data/dataset.h5"
+    argstate.timeout = 10
+    return argstate
