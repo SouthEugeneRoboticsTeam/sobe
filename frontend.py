@@ -21,7 +21,8 @@ from preprocessing import BatchGenerator
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from utils import BoundBox
 from backend import TinyYoloFeature, FullYoloFeature
-
+from threading import Lock
+lock = Lock()
 
 class YOLO(object):
     def __init__(self,
@@ -265,6 +266,7 @@ class YOLO(object):
         self.model.load_weights(weight_path)
 
     def predict(self, image):
+        #self.model._make_predict_function()
         image = cv2.resize(image, (self.input_size, self.input_size))
         image = self.feature_extractor.normalize(image)
 
@@ -272,8 +274,9 @@ class YOLO(object):
         input_image = np.expand_dims(input_image, 0)
         dummy_array = dummy_array = np.zeros(
             (1, 1, 1, 1, self.max_box_per_image, 4))
-
+        lock.acquire()
         netout = self.model.predict([input_image, dummy_array])[0]
+        lock.release()
         boxes = self.decode_netout(netout)
 
         return boxes

@@ -4,24 +4,10 @@ import cli
 import cv2
 from frontend import YOLO
 from time import sleep
-from threaddispatch import VideoThreadDispatcher
+from threaddispatch import VideoThreadDispatcher, process_image
 from utils import draw_boxes
 import time
 
-def process_image(frame,argstate):
-    if frame is None:
-        return
-    print("Processing image")
-    yolo = YOLO(architecture=argstate.architecture,
-                     input_size=argstate.input_size,
-                     labels=argstate.labels,
-                     max_box_per_image=argstate.max_box_per_image,
-                     anchors=argstate.anchors)
-    yolo.load_weights(argstate.weights)
-    boxes = yolo.predict(frame)
-    image = draw_boxes(frame,boxes,argstate.labels)
-    # Right now, it just saves images
-    cv2.imwrite("/home/jacksoncoder/PycharmProjects/Sobe/latest"+ str(int(time.time())) +  ".jpg", image)
 
 
 def main(argstate):
@@ -41,13 +27,13 @@ def main(argstate):
     # Step 2: Start thread dispatching
     #
 
-    td = VideoThreadDispatcher(argstate,argstate.timeout,30) # Iterates 30 frames each time
+    td = VideoThreadDispatcher(argstate,argstate.timeout)
     td.load(process_image)
-
+    sleep(4)
     # Begin main loop
-
     while 1:
         td.dispatch() # Build a new thread
+        sleep(0.2) # Wait 2/10ths of a second
 
 if __name__ == "__main__": # Entry point
     argstate = cli.parse_production()

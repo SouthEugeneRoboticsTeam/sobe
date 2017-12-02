@@ -3,19 +3,39 @@
 
 import multiprocessing
 from time import sleep
+from camera import CameraProcessor
+from frontend import YOLO
+from utils import draw_boxes
+import time
 import cv2
 
 thread_cap = 10 # Maximum amount of threads that we want running at once
 
 locked = False
 
+
+def process_image(frame,argstate):
+    if frame is None:
+        return
+    print("Processing image")
+    yolo = YOLO(architecture=argstate.architecture,
+                input_size=argstate.input_size,
+                labels=argstate.labels,
+                max_box_per_image=argstate.max_box_per_image,
+                anchors=argstate.anchors)
+    yolo.load_weights(argstate.weights)
+    boxes = yolo.predict(frame)
+    image = draw_boxes(frame,boxes,argstate.labels)
+    # Right now, it just saves images
+    cv2.imwrite("/home/jacksoncoder/PycharmProjects/Sobe/latest"+ str(int(time.time())) +  ".jpg", image)
+
 class VideoThreadDispatcher:
 
-    def __init__(self,argstate,timeout,fskip):
+    def __init__(self,argstate,timeout):
         self.args = argstate
-        self.camlink = cv2.VideoCapture(0)
+        self.camlink = CameraProcessor(0)
         self.timeout = timeout
-        self.frame_skip = fskip
+        self.camlink.start_read()
 
     # Load function to run in thread
 
@@ -33,13 +53,10 @@ class VideoThreadDispatcher:
         if len(multiprocessing.active_children()) >= thread_cap*2:
             print("Waiting for threads to finish")
             return
-        # Load and skip <self.frame_skip> frames
-        for i in range(self.frame_skip):
-            self.camlink.grab()
-        # Read next frame
-        _, f = self.camlink.read()
+        # Read latest frame
+        f = self.camlink.get_latest()
         t = multiprocessing.Process(target=self.tfunc,args=[f,self.args])
         t.start()
         # Start a thread to stop the other one after a certain amount of time
-        stop = multiprocessing.Process(target=self.stop_after,args=[self.timeout,t])
-        stop.start()
+        #stop = multiprocessing.Process(target=self.stop_after,args=[self.timeout,t])
+        #stop.start()
