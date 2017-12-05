@@ -30,18 +30,17 @@ def process_image(frame,argstate):
                 anchors=argstate.anchors)
     yolo.load_weights(argstate.weights)
     boxes = yolo.predict(frame)
+    yolo = None
     accuracylist = sorted(boxes,key=lambda x: x.score,reverse=True)
     if len(accuracylist) == 0:
         retake = True
         print("Could not identify bucket")
+        return
     retake = False
     mostaccurate = accuracylist[0]
-    width, height = frame.shape[:2]
-    x = mostaccurate.x
-    y = mostaccurate.y
-    avg_x = (x + mostaccurate.w) / 2 - 0.5
-    avg_y = (y + mostaccurate.h) / 2 - 0.5
-    updated_frame = (avg_x * width,avg_y * height)
+    height, width = frame.shape[:2]
+    x = mostaccurate.x - 0.5
+    updated_frame = (x * width)
     image = draw_boxes(frame,[mostaccurate],argstate.labels)
     # temporary, for verification
     print(cv2.imwrite("/home/jacksoncoder/PycharmProjects/Sobe/latest" + str(int(time.time())) + ".jpg",image))
