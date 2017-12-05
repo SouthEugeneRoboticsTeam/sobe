@@ -3,7 +3,7 @@
 import cli
 import cv2
 from time import sleep
-from threaddispatch import VideoThreadDispatcher, process_image
+from threaddispatch import VideoThreadDispatcher, process_image, latest_frame
 import os
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -28,11 +28,17 @@ def main(argstate):
 
     td = VideoThreadDispatcher(argstate,argstate.timeout)
     td.load(process_image)
-    sleep(4)
-    # Begin main loop
-    while 1:
-        td.dispatch() # Build a new thread
-        sleep(0.2) # Wait 2/10ths of a second
+    while not td.camera_on():
+        sleep(0.1)
+    td.dispatch()
+    while latest_frame() is None and not td.need_retake():
+        sleep(0.1)
+    while td.need_retake():
+        print("retaking")
+        td.dispatch()
+        while latest_frame() is None and not td.need_retake():
+            sleep(0.1)
+    print(latest_frame())
 
 if __name__ == "__main__": # Entry point
     argstate = cli.parse_production()
