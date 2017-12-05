@@ -107,11 +107,6 @@ def parse_production():
         '-w',
         '--weights',
         help='path to pretrained weights')
-
-    argparser.add_argument(
-        '-i',
-        '--input',
-        help='path to an image or an video (mp4 format)')
     argparser.add_argument(
         '-t',
         '--timeout',
@@ -129,6 +124,14 @@ def parse_production():
     argstate.labels = config['model']['labels']
     argstate.max_box_per_image = config['model']['max_box_per_image']
     argstate.anchors = config['model']['anchors']
-    argstate.weights = "/home/jacksoncoder/PycharmProjects/Sobe/data/dataset.h5"
-    argstate.timeout = 10
+    if args.weights is None:
+        argstate.weights = config['production']['weights']
+    else:
+        argstate.weights = args.weights
+
+    if args.timeout is None:
+        argstate.timeout = config['production']['timeout']
+    else:
+        argstate.timeout = args.timeout
+    argstate.ip = config['production']['ip']
     return argstate
