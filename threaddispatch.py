@@ -9,7 +9,7 @@ from utils import draw_boxes
 import time
 import cv2
 
-thread_cap = 10 # Maximum amount of threads that we want running at once
+thread_cap = 5 # Maximum amount of threads that we want running at once
 
 locked = False
 
@@ -50,7 +50,7 @@ class VideoThreadDispatcher:
 
     def dispatch(self):
 
-        if len(multiprocessing.active_children()) >= thread_cap*2:
+        if len(multiprocessing.active_children()) >= thread_cap:
             print("Waiting for threads to finish")
             return
         # Read latest frame
