@@ -2,10 +2,8 @@
 
 import cli
 import cv2
-from frontend import YOLO
 from time import sleep
 from threaddispatch import VideoThreadDispatcher, process_image
-from utils import draw_boxes
 import os
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
