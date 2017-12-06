@@ -14,36 +14,46 @@ thread_cap = 1 # Maximum amount of threads that we want running at once
 
 locked = False
 
-updated_frame = None
+updated_data = None
 
 retake = False
 
-def process_image(frame,argstate):
-    global updated_frame,retake
-    if frame is None:
-        return
-    print("Processing image")
+start = True
+
+current_frame = None
+
+def process_image(argstate):
     yolo = YOLO(architecture=argstate.architecture,
                 input_size=argstate.input_size,
                 labels=argstate.labels,
                 max_box_per_image=argstate.max_box_per_image,
                 anchors=argstate.anchors)
     yolo.load_weights(argstate.weights)
-    boxes = yolo.predict(frame)
-    yolo = None
-    accuracylist = sorted(boxes,key=lambda x: x.score,reverse=True)
-    if len(accuracylist) == 0:
-        retake = True
-        print("Could not identify bucket")
-        return
-    retake = False
-    mostaccurate = accuracylist[0]
-    height, width = frame.shape[:2]
-    x = mostaccurate.x - 0.5
-    updated_frame = (x * width)
-    image = draw_boxes(frame,[mostaccurate],argstate.labels)
-    # temporary, for verification
-    print(cv2.imwrite("/home/jacksoncoder/PycharmProjects/Sobe/latest" + str(int(time.time())) + ".jpg",image))
+    finished = False
+    while not finished:
+        global updated_data,retake, start, current_frame
+        if current_frame is None:
+            return
+        print("Processing image")
+        boxes = yolo.predict(current_frame)
+        accuracylist = sorted(boxes,key=lambda x: x.score,reverse=True)
+        if len(accuracylist) == 0:
+            retake = True
+            print("Could not identify bucket")
+            start = False
+            while not start:
+                sleep(0.1)
+            continue
+        retake = False
+        print("Not retaking!")
+        finished = True
+        mostaccurate = accuracylist[0]
+        _, width = current_frame.shape[:2]
+        x = mostaccurate.x - 0.5
+        updated_data = (x * width)
+        image = draw_boxes(current_frame,[mostaccurate],argstate.labels)
+        # temporary, for verification
+        print(cv2.imwrite("/home/jacksoncoder/PycharmProjects/Sobe/latest" + str(int(time.time())) + ".jpg",image))
 
 class VideoThreadDispatcher:
 
@@ -71,18 +81,23 @@ class VideoThreadDispatcher:
         return retake
 
     def dispatch(self):
-        global retake
+        global retake, current_frame
         retake = False
         if len(multiprocessing.active_children()) > thread_cap:
             print("Waiting for threads to finish")
             return
         # Read latest frame
-        f = self.camlink.get_latest()
-        t = threading.Thread(target=self.tfunc,args=[f,self.args])
+        current_frame = self.camlink.get_latest()
+        t = threading.Thread(target=self.tfunc,args=[self.args])
         t.start()
         # Start a thread to stop the other one after a certain amount of time
         #stop = multiprocessing.Process(target=self.stop_after,args=[self.timeout,t])
         #stop.start()
+    def update_frame(self):
+        global updated_data, start, retake, current_frame
+        retake = False
+        current_frame = self.camlink.get_latest()
+        start = True
 
 def latest_frame():
-    return updated_frame
+    return updated_data

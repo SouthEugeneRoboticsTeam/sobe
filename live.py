@@ -43,14 +43,14 @@ def main(argstate):
     while not td.camera_on():
         sleep(0.1)
     td.dispatch()
+
     while latest_frame() is None and not td.need_retake():
         sleep(0.1)
     while td.need_retake():
         print("retaking")
-        td.dispatch()
+        td.update_frame()
         while latest_frame() is None and not td.need_retake():
             sleep(0.1)
-
     #
     # Step 4: Attempt to broadcast to the RoboRIO
     #
