@@ -5,10 +5,11 @@ import threading
 import cv2
 lock = threading.Lock()
 camera_open = False
+close = False
 def read_loop(port,cameraprocessor):
     global camera_open
     vc = cv2.VideoCapture(port)
-    while 1:
+    while not close:
         _,f = vc.read()
         if not camera_open: camera_open = True
         lock.acquire()
@@ -25,6 +26,9 @@ class CameraProcessor:
         self.process.start()
     def get_latest(self):
         return self.frame
+    def close(self):
+        global close
+        close = True
 
 def is_on():
     return camera_open

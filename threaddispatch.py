@@ -99,5 +99,8 @@ class VideoThreadDispatcher:
         current_frame = self.camlink.get_latest()
         start = True
 
+    def close_camera(self):
+        self.camlink.close()
+
 def latest_frame():
     return updated_data

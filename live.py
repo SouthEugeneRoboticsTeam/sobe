@@ -58,7 +58,9 @@ def main(argstate):
     result = send_to_network(data)
     if not result[0]:
         print(result[1])
+        td.close_camera()
         exit(0)
+    td.close_camera()
     exit(0)
 
 if __name__ == "__main__": # Entry point
