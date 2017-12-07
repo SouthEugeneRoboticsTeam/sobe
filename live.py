@@ -16,13 +16,12 @@ def main(argstate):
     #
     # Step 1: Connect to camera:
     #
-
-    camera = cv2.VideoCapture(0) # First camera registered
-    ret, frame = camera.read()
-    if ret == False or frame is None:
-        print("Could not connect to camera. Check the connection of the LiveCam and try again")
-        return
-    camera.release()
+    camera1 = cv2.VideoCapture(0)
+    camera2 = cv2.VideoCapture(0)
+    assert(camera1.read()[1] is not None or
+    camera2.read()[1] is not None)
+    camera1.release()
+    camera2.release()
 
     #
     # Step 2: Connect to network

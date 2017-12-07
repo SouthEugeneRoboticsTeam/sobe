@@ -32,28 +32,24 @@ def process_image(argstate):
     finished = False
     while not finished:
         global updated_data,retake, start, current_frame
+        print(current_frame)
         if current_frame is None:
             return
-        print("Processing image")
         boxes = yolo.predict(current_frame)
         accuracylist = sorted(boxes,key=lambda x: x.score,reverse=True)
         if len(accuracylist) == 0:
             retake = True
-            print("Could not identify bucket")
             start = False
             while not start:
                 sleep(0.1)
             continue
         retake = False
-        print("Not retaking!")
         finished = True
         mostaccurate = accuracylist[0]
         _, width = current_frame.shape[:2]
         x = mostaccurate.x - 0.5
         updated_data = (x * width)
         image = draw_boxes(current_frame,[mostaccurate],argstate.labels)
-        # temporary, for verification
-        print(cv2.imwrite("/home/jacksoncoder/PycharmProjects/Sobe/latest" + str(int(time.time())) + ".jpg",image))
 
 class VideoThreadDispatcher:
 
@@ -84,15 +80,12 @@ class VideoThreadDispatcher:
         global retake, current_frame
         retake = False
         if len(multiprocessing.active_children()) > thread_cap:
-            print("Waiting for threads to finish")
             return
         # Read latest frame
         current_frame = self.camlink.get_latest()
+        print(current_frame)
         t = threading.Thread(target=self.tfunc,args=[self.args])
         t.start()
-        # Start a thread to stop the other one after a certain amount of time
-        #stop = multiprocessing.Process(target=self.stop_after,args=[self.timeout,t])
-        #stop.start()
     def update_frame(self):
         global updated_data, start, retake, current_frame
         retake = False
