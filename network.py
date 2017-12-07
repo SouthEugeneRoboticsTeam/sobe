@@ -1,5 +1,6 @@
 # Communicates with RoboRIO
 import networktables
+from time import sleep
 
 net = None
 
@@ -18,3 +19,11 @@ def send_to_network(value):
     except:
         return (False,"Could not update the NetworkTable")
     return (True,"")
+
+def wait_for_init():
+    try:
+        table = net.getTable('Vision')
+        while not table.getBool("init",False):
+              sleep(1)
+    except:
+        print("Failed to connect to Network Table")
