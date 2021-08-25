@@ -2,5 +2,5 @@ opencv-python==3.3.0.10
 tqdm==4.19.4
 numpy==1.13.3
 imgaug==0.2.5
-tensorflow==1.12.2
+tensorflow==2.5.1
 h5py==2.7.1
