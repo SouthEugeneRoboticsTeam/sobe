@@ -1,4 +1,4 @@
-opencv-python==3.3.0.10
+opencv-python==3.4.7.28
 tqdm==4.19.4
 numpy==1.13.3
 imgaug==0.2.5
